@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills Matrix & Team Assignment Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <!-- App Header -->
+    <div class="app-header">
+        <h1>📊 Skills Matrix & Team Assignment Tool</h1>
+        <div class="user-info">
+            <span class="user-badge" id="userBadge"></span>
+            <select id="roleSelector" class="role-selector">
+                <option value="admin">Admin</option>
+                <option value="manager">Manager</option>
+                <option value="employee">Employee</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs" id="navTabs"></div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="content-section active">
+            <div class="stats-grid" id="statsGrid"></div>
+            
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h4>Top Skills Distribution</h4>
+                    <canvas id="topSkillsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h4>Department Breakdown</h4>
+                    <canvas id="departmentChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h4>Skill Level Distribution</h4>
+                    <canvas id="skillLevelChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h4>Employee Skill Profile</h4>
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employees Section -->
+        <div id="employeesSection" class="content-section">
+            <div class="card">
+                <h3>👥 Employee Management</h3>
+                <div class="search-bar">
+                    <input type="text" id="employeeSearch" placeholder="Search by name, email, or department...">
+                    <select id="departmentFilter" class="filter-select">
+                        <option value="">All Departments</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Design">Design</option>
+                        <option value="Analytics">Analytics</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="IT">IT</option>
+                    </select>
+                    <select id="roleFilter" class="filter-select">
+                        <option value="">All Roles</option>
+                        <option value="admin">Admin</option>
+                        <option value="manager">Manager</option>
+                        <option value="employee">Employee</option>
+                    </select>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Role</th>
+                                <th>Skills Count</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div id="skillsSection" class="content-section">
+            <div class="card">
+                <h3>🎯 Skills Management</h3>
+                <div id="skillsAlert"></div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="addSkillBtn" onclick="showAddSkillModal()">
+                        + Add New Skill
+                    </button>
+                </div>
+                <div class="skills-grid" id="skillsGrid"></div>
+            </div>
+        </div>
+
+        <!-- Projects Section -->
+        <div id="projectsSection" class="content-section">
+            <div class="card">
+                <h3>📁 Projects & Team Assignment</h3>
+                <div id="projectsAlert"></div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="addProjectBtn" onclick="showAddProjectModal()">
+                        + Create New Project
+                    </button>
+                </div>
+                <div class="project-grid" id="projectsGrid"></div>
+            </div>
+        </div>
+
+        <!-- My Profile Section -->
+        <div id="profileSection" class="content-section">
+            <div class="card">
+                <h3>👤 My Profile</h3>
+                <div id="profileContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Skill Modal -->
+    <div id="addSkillModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Skill</h3>
+                <button class="close-btn" onclick="closeModal('addSkillModal')">&times;</button>
+            </div>
+            <form id="addSkillForm">
+                <div class="form-group">
+                    <label>Skill Name</label>
+                    <input type="text" id="newSkillName" required placeholder="e.g., JavaScript">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="newSkillCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Technical">Technical</option>
+                        <option value="Soft Skills">Soft Skills</option>
+                        <option value="Tools">Tools</option>
+                        <option value="Languages">Languages</option>
+                        <option value="Design">Design</option>
+                        <option value="Management">Management</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Add Skill</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addSkillModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Project Modal -->
+    <div id="addProjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Project</h3>
+                <button class="close-btn" onclick="closeModal('addProjectModal')">&times;</button>
+            </div>
+            <form id="addProjectForm">
+                <div class="form-group">
+                    <label>Project Name</label>
+                    <input type="text" id="newProjectName" required placeholder="e.g., E-commerce Platform">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="newProjectDesc" required placeholder="Project description..." rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Required Skills (comma separated)</label>
+                    <input type="text" id="newProjectSkills" placeholder="JavaScript, React, CSS" required>
+                </div>
+                <div class="form-group">
+                    <label>Minimum Skill Level (1-5)</label>
+                    <input type="number" id="newProjectMinLevel" min="1" max="5" value="3" required>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Create Project</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addProjectModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Assign Team Modal -->
+    <div id="assignTeamModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Assign Team Members</h3>
+                <button class="close-btn" onclick="closeModal('assignTeamModal')">&times;</button>
+            </div>
+            <div id="matchedEmployees"></div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('assignTeamModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Employee Skills Modal -->
+    <div id="viewSkillsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="viewSkillsTitle">Employee Skills</h3>
+                <button class="close-btn" onclick="closeModal('viewSkillsModal')">&times;</button>
+            </div>
+            <div id="viewSkillsContent"></div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('viewSkillsModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
